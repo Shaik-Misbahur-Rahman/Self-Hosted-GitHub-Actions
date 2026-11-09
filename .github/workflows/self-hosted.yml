@@ -3,13 +3,28 @@ name: Terraform CI Pipeline
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   terraform:
-    runs-on: [self-hosted, amazonlinux, dev]
+    runs-on: [self-hosted, linux, dev]
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Check Runner
+        run: |
+          echo "Running on AWS Self Hosted Runner"
+          hostname
+          whoami
+
+      - name: Check AWS Identity
+        run: aws sts get-caller-identity
+
+      - name: Terraform Version
+        run: terraform version
 
       - name: Terraform Init
         run: terraform init
